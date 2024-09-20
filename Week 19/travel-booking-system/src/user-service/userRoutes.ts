@@ -7,7 +7,7 @@ const router  = Router();
 //CRUD
 router.get('/', userController.get);
 router.get('/:id', userController.getByID);
-router.post('/',userMiddleware.userValidation, userController.create);
+router.post('/', userMiddleware.userValidation, userMiddleware.userVallidationHandler, userController.create);
 router.put('/:id',userMiddleware.userValidation,  userController.update);
 router.delete('/:id', userController.remove);
 

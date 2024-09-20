@@ -1,46 +1,46 @@
 import { Request,Response } from "express";
-import users from "./userModel.js";
+import User from "./userModel.js";
 
-const get = (req: Request,res: Response) => {
+const get = async (req: Request,res: Response) => {
+    const users = await User.find();
     res.send(users);
 };
 
-const getByID =  (req: Request, res: Response) => {
-    const userId = parseInt(req.params.id);
-    const user = users.find(u => u.id === userId);
-
+const getByID =  async (req: Request, res: Response) => {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
     if (!user) {
         return res.status(404).send({ message: 'User not found' });
     }
     res.status(200).send(user); // Respond with the found user
 }
 
-const create = (req: Request,res: Response) => {
+const create = async (req: Request,res: Response) => {
     const {name, email} = req.body;
-    const user  = {
-        id: users.length + 1,
+    const user  = new User({
         name,
         email
-    }
-    users.push(user);
+    });
+    await user.save()
     res.status(201).send(user);
 }
 
-const update =  (req: Request,res: Response) => {
-    const userId = parseInt(req.params.id);
-    const userIndex = users.findIndex(u => u.id === userId);
-    if (userIndex === -1) {
+const update =  async (req: Request,res: Response) => {
+    const userId = req.params.id;
+    const { name, email } = req.body;
+    const user = await User.findByIdAndUpdate(userId, {name, email}, {new: true});
+    if (user) {
         return res.status(404).send({ message: 'User not found' });
     }
-    const { name, email } = req.body;
-    users[userIndex] = { id: userId, name, email }; // Update user
-    res.status(200).send(users[userIndex]); // Respond with the updated user
+    res.status(200).send(user); // Respond with the updated user
 }
 
-const remove =  (req: Request,res: Response) => {
-    const userId = parseInt(req.params.id);
-    const userIndex = users.findIndex(u => u.id === userId);
-    users.splice(userIndex, 1);
+const remove =  async (req: Request,res: Response) => {
+    const userId = req.params.id;
+    const user = await User.findByIdAndDelete(userId)
+    if (user) {
+        return res.status(404).send({ message: 'User not found' });
+    }
     res.status(204).send(); // Respond with no content
 }
 
