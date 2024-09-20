@@ -1,57 +1,13 @@
 import { Router } from "express";
-import { Request, Response } from "express";
+import userController from "./userController.js";
 
-interface User {
-    id: number;
-    name: string;
-    email: string;
-}
-let users: User[] = [];
 const router  = Router();
+
 //CRUD
-
-router.get('/', (req: Request,res: Response) => {
-    res.send(users);
-});
-
-// Route to get a user by ID
-router.get('/:id', (req, res) => {
-    const userId = parseInt(req.params.id);
-    const user = users.find(u => u.id === userId);
-    if (!user) {
-        return res.status(404).send({ message: 'User not found' });
-    }
-    res.status(200).send(user); // Respond with the found user
-});
-
-router.post('/', (req: Request,res: Response) => {
-    const {name, email} = req.body;
-    const user  = {
-        id: users.length + 1,
-        name,
-        email
-    }
-    users.push(user);
-    res.status(201).send(user);
-});
-
-// Route to update a user
-router.put('/:id', (req, res) => {
-    const userId = parseInt(req.params.id);
-    const userIndex = users.findIndex(u => u.id === userId);
-    if (userIndex === -1) {
-        return res.status(404).send({ message: 'User not found' });
-    }
-    const { name, email } = req.body;
-    users[userIndex] = { id: userId, name, email }; // Update user
-    res.status(200).send(users[userIndex]); // Respond with the updated user
-});
-
-// Route to delete a user
-router.delete('/:id', (req, res) => {
-    const userId = parseInt(req.params.id);
-    users = users.filter(u => u.id !== userId); // Remove user
-    res.status(204).send(); // Respond with no content
-});
+router.get('/', userController.get);
+router.get('/:id', userController.getByID);
+router.post('/', userController.create);
+router.put('/:id', userController.update);
+router.delete('/:id', userController.remove);
 
 export default router;
