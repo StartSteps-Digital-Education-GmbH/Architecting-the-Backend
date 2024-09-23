@@ -1,36 +1,35 @@
-import express from 'express';
 import { Request, Response } from 'express';
-import flights, {Flight} from './flightModel.js';
+import Flight from './flightModel.js';
 
-const create = (req: Request, res: Response) => {
+const create = async (req: Request, res: Response) => {
     const { origin, destination, price } = req.body;
-    const newFlight: Flight = {
-        id: flights.length + 1, // Simple ID generation
+    const newFlight = {
         origin,
         destination,
         price,
     };
-    flights.push(newFlight); // Add flight to the mock database
+    const flight = new Flight(newFlight);
+    await flight.save();
     res.status(201).send(newFlight); // Respond with the created flight
 }
 
-const get =  (req: Request, res: Response) => {
+const get =  async (req: Request, res: Response) => {
+    const flights = await Flight.find();
     res.status(200).send(flights); // Respond with the list of flights
 };
 
-const getByID = (req: Request, res: Response) => {
-    const flightId = parseInt(req.params.id);
-    const flight = flights.find(f => f.id === flightId);
+const getByID = async (req: Request, res: Response) => {
+    const flightId = req.params.id;
+    const flight = await  Flight.findById(flightId);
     if (!flight) {
         return res.status(404).send({ message: 'Flight not found' });
     }
     res.status(200).send(flight); // Respond with the found flight
 };
 
-const remove =  (req: Request, res: Response) => {
-    const flightId = parseInt(req.params.id);
-    const flightIndex = flights.findIndex(f => f.id === flightId);
-    flights.splice(flightIndex, 1)
+const remove = async (req: Request, res: Response) => {
+    const flightId = req.params.id;
+    await Flight.findByIdAndDelete(flightId);
     res.status(204).send(); // Respond with no content
 };
 
