@@ -13,6 +13,10 @@ const flightSchema = Joi.object({
     price: Joi.number().required().messages({
         'number.base': 'Price must be a Number',
         'any.required': 'Price is required'
+    }),
+    userId: Joi.string().required().messages({
+        'string.base': 'Origin must be a string',
+        'any.required': 'Origin is required'
     })
 });
 

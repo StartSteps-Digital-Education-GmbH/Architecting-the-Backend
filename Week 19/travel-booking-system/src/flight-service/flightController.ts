@@ -1,16 +1,23 @@
 import { Request, Response } from 'express';
+import axios from 'axios';
 import Flight from './flightModel.js';
 
 const create = async (req: Request, res: Response) => {
-    const { origin, destination, price } = req.body;
+    const { origin, destination, price, userId } = req.body;
     const newFlight = {
         origin,
         destination,
         price,
     };
-    const flight = new Flight(newFlight);
-    await flight.save();
-    res.status(201).send(newFlight); // Respond with the created flight
+    const userRequest = await axios.get(`http://localhost:${process.env.USER_SERVICES_PATH}/users/${userId}`);
+
+    if(userRequest.status === 200) {
+        const flight = new Flight(newFlight);
+        await flight.save();
+        res.status(201).send(newFlight); // Respond with the created flight
+    } else {
+        return res.status(404).send("User not Found");
+    };
 }
 
 const get =  async (req: Request, res: Response) => {

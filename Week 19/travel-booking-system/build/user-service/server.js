@@ -5,6 +5,10 @@ const app = express();
 const PORT = 3001; //TODO:move this to an .env file
 app.use(express.json());
 app.use('/users', router);
+app.use((err, req, res, next) => {
+    //Logging
+    res.status(err.status || 500).send({ message: err.message || 'Something went wrong' });
+});
 mongoose.connect('mongodb+srv://testuser:test1234@education.bsck2.mongodb.net/?retryWrites=true&w=majority&appName=education').then(() => {
     console.log("Connected to the DB");
 }).catch((err) => {

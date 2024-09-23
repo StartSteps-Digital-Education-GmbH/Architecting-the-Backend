@@ -1,19 +1,29 @@
-import express from 'express';
+import express, {Request, Response, NextFunction, ErrorRequestHandler} from 'express';
 import router from './userRoutes.js';
 import mongoose from 'mongoose';
 
 const app = express();
 
-const PORT = 3001; //TODO:move this to an .env file
+const PORT = process.env.USER_SERVICES_PATH || 3001;
 
 app.use(express.json());
 app.use('/users',router);
 
-mongoose.connect('mongodb+srv://testuser:test1234@education.bsck2.mongodb.net/?retryWrites=true&w=majority&appName=education').then(() => {
-    console.log("Connected to the DB")
-}).catch((err) => {
-    console.log("Error in connecting to the DB", err)
-});
+// TODO: The error middleware is not woring properly
+// app.use((err: ErrorRequestHandler,req: Request,res: Response,next: NextFunction) => {
+//     //Logging
+//     res.status(err.status || 500).send({message: err.message || 'Something went wrong'});
+// });
+
+if(process.env.MONGODB_URI) {
+    mongoose.connect(process.env.MONGODB_URI).then(() => {
+        console.log("Connected to the DB")
+    }).catch((err) => {
+        console.log("Error in connecting to the DB", err)
+    });
+} else {
+    console.log("Database Server URL not found in .env file")
+}
 
 app.listen(PORT, () => {
     console.log(`the user server is open at port: ${PORT}`)
