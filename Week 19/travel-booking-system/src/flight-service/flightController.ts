@@ -20,11 +20,15 @@ const get =  async (req: Request, res: Response) => {
 
 const getByID = async (req: Request, res: Response) => {
     const flightId = req.params.id;
-    const flight = await  Flight.findById(flightId);
-    if (!flight) {
-        return res.status(404).send({ message: 'Flight not found' });
+    try {
+        const flight = await  Flight.findById(flightId);
+        if (!flight) {
+            return res.status(404).send({ message: 'Flight not found' });
+        }
+        res.status(200).send(flight); // Respond with the found flight
+    } catch(error) {
+        res.status(500).send(error);
     }
-    res.status(200).send(flight); // Respond with the found flight
 };
 
 const remove = async (req: Request, res: Response) => {

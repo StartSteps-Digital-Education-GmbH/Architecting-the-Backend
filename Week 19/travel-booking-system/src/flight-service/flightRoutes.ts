@@ -1,9 +1,8 @@
-import express from 'express';
 import flightController from './flightController.js';
 import { Router } from 'express';
-
+import validator from './middlewares.js'
 const router =  Router();
-router.post('/', flightController.create);
+router.post('/', validator, flightController.create);
 router.get('/', flightController.get);
 router.get('/:id', flightController.getByID);
 router.delete('/:id', flightController.remove);
