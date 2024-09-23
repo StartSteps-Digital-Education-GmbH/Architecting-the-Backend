@@ -1,4 +1,5 @@
 ### 1. Scenario: Linking Users to Flights
+This Excersize is optional.
 Suppose we want to create a flight booking system where each flight is associated with a user. The microservices for users and flights are separate, but we want them to communicate when a user books a flight. For example, when creating a flight, we also want to validate if the user exists in the user service.
 
 ### 2. Microservice Communication Strategy
