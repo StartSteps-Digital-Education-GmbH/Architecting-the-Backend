@@ -1,7 +1,9 @@
 import express from 'express';
 import router from './flightRoutes.js';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 
 const PORT = process.env.FLIGHT_SERVICES_PATH || 3002;

@@ -1,19 +1,14 @@
-import express, {Request, Response, NextFunction, ErrorRequestHandler} from 'express';
+import express, {Request, Response, NextFunction} from 'express';
+import dotenv from 'dotenv';
 import router from './userRoutes.js';
 import mongoose from 'mongoose';
 
+dotenv.config();
 const app = express();
 
 const PORT = process.env.USER_SERVICES_PATH || 3001;
-
 app.use(express.json());
 app.use('/users',router);
-
-// TODO: The error middleware is not woring properly
-// app.use((err: ErrorRequestHandler,req: Request,res: Response,next: NextFunction) => {
-//     //Logging
-//     res.status(err.status || 500).send({message: err.message || 'Something went wrong'});
-// });
 
 if(process.env.MONGODB_URI) {
     mongoose.connect(process.env.MONGODB_URI).then(() => {
