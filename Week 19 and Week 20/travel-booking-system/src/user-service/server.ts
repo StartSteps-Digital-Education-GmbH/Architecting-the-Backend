@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 
 const PORT = process.env.USER_SERVICES_PATH || 3001;
-app.use(express.json());
+// app.use(express.json());
 app.use('/api/users',router);
 
 const connectDB = async () => {

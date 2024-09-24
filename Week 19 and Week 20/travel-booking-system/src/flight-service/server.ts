@@ -8,7 +8,7 @@ const app = express();
 
 const PORT = process.env.FLIGHT_SERVICES_PATH || 3002;
 
-app.use(express.json());
+// app.use(express.json());
 app.use('/api/flights',router);
 const connecDB = async () => {
     try {
