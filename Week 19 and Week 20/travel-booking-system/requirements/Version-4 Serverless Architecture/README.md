@@ -49,7 +49,7 @@ const app = express();
 app.use(express.json());
 
 // Route handling for users
-app.use('/users', router);
+app.use('api/users', router);
 
 // MongoDB connection logic
 const connectDB = async () => {
@@ -73,7 +73,7 @@ import mongoose from 'mongoose';
 
 const app = express();
 app.use(express.json());
-app.use('/flights', flightRouter);
+app.use('api/flights', flightRouter);
 
 // MongoDB connection logic
 const connectDB = async () => {

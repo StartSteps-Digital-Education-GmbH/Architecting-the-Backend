@@ -8,20 +8,24 @@ const app = express();
 
 const PORT = process.env.USER_SERVICES_PATH || 3001;
 app.use(express.json());
-app.use('/users',router);
+app.use('/api/users',router);
 
-if(process.env.MONGODB_URI) {
-    mongoose.connect(process.env.MONGODB_URI).then(() => {
-        console.log("Connected to the DB")
-    }).catch((err) => {
-        console.log("Error in connecting to the DB", err)
-    });
-} else {
-    console.log("Database Server URL not found in .env file")
+const connectDB = async () => {
+    try {
+        if(process.env.MONGODB_URI) {
+            await mongoose.connect(process.env.MONGODB_URI)
+            console.log("Connected to the DB")
+        } else {
+            console.log("Database Server URL not found in .env file")
+        }
+    } catch (error) {
+        console.log("Error in connecting to the DB", error)
+    }
 }
 
 
+// app.listen(PORT, () => {
+//     console.log(`the user server is open at port: ${PORT}`)
+// })
 
-app.listen(PORT, () => {
-    console.log(`the user server is open at port: ${PORT}`)
-})
+export {app, connectDB};
