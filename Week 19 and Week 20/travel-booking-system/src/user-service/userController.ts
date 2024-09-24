@@ -1,5 +1,5 @@
 import { Request,Response } from "express";
-import User from "./userModel.js";
+import User from "../modals/userModel.js";
 
 const get = async (req: Request,res: Response) => {
     const users = await User.find();
@@ -16,6 +16,7 @@ const getByID =  async (req: Request, res: Response) => {
 }
 
 const create = async (req: Request,res: Response) => {
+
     const {name, email} = req.body;
     const user  = new User({
         name,

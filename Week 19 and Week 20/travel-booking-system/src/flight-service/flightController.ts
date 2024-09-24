@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
-import Flight from './flightModel.js';
+import Flight from '../modals/flightModel.js';
+import User from '../modals/userModel.js';
 
 const create = async (req: Request, res: Response) => {
-    const { origin, destination, price, userId } = req.body;
     try {
-        await axios.get(`http://localhost:${process.env.USER_SERVICES_PATH}/users/${userId}`); // will return 404 if the user is not found and will be caught in the catch block
+    const { origin, destination, price, userId } = req.body;
+        const user = await User.findById(userId);
+        if(!user) {
+            return res.status(404).send("User not found");
+        }
         const newFlight = {
             origin,
             destination,
@@ -13,14 +17,10 @@ const create = async (req: Request, res: Response) => {
         };
         const flight = new Flight(newFlight);
         await flight.save();
-        res.status(201).send(newFlight); // Respond with the created flight
+        res.status(201).send(newFlight);
     } catch (error: any) {
-        if (error.response.status === 404) {
-            return res.status(404).send({ message: 'User not found' });
-        } else {
-            return res.status(error.status || 500).send(error);
-        }
-    };
+        return res.status(error.status || 500).send({message:error.message, userMessage: "Somthing went wrong"});
+    }
 }
 
 const get =  async (req: Request, res: Response) => {
@@ -47,4 +47,21 @@ const remove = async (req: Request, res: Response) => {
     res.status(204).send(); // Respond with no content
 };
 
-export default {get, getByID, create, remove};
+const updateById = async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params;
+        const {origin, destination, price, userId} = req.body;
+        await axios.get(`http://localhost:${process.env.USER_SERVICES_PATH}/users/${userId}`);
+        const updatedFight = await Flight.findByIdAndUpdate(id, {
+            origin,
+            destination,
+            price
+        }, {new: true});
+        res.status(200).send(updatedFight);
+    } catch(error: any) {
+        console.log(error)
+        res.status(error.status || 500).send(error.message || "Somthing went wrong")
+    }
+}
+
+export default {get, getByID, create, remove, updateById};

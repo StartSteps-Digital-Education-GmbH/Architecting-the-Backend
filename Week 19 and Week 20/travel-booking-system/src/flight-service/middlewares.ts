@@ -15,8 +15,8 @@ const flightSchema = Joi.object({
         'any.required': 'Price is required'
     }),
     userId: Joi.string().required().messages({
-        'string.base': 'Origin must be a string',
-        'any.required': 'Origin is required'
+        'string.base': 'userID must be a string',
+        'any.required': 'userID is required'
     })
 });
 

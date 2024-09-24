@@ -3,7 +3,7 @@ import userController from "./userController.js";
 import userMiddleware from './middlewares.js'
 
 const router  = Router();
-
+console.log("request came here");
 //CRUD
 router.get('/', userController.get);
 router.get('/:id', userController.getByID);

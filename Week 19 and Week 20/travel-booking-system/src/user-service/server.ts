@@ -20,6 +20,8 @@ if(process.env.MONGODB_URI) {
     console.log("Database Server URL not found in .env file")
 }
 
+
+
 app.listen(PORT, () => {
     console.log(`the user server is open at port: ${PORT}`)
 })
