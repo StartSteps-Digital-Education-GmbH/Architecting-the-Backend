@@ -85,4 +85,4 @@
 
 ### **Next Lessons**: 
    - [SQLite Guide: Building a Travel Booking System](SQL_in_Action.md)
-   - [SQL Functions and Aggregations](SQL_in_Action_2.md)
+   - [SQLite Guide: Working with Aggregation Functions](SQL_in_Action_2.md)
