@@ -82,3 +82,7 @@
    - SQL is the backbone of managing relational databases.
    - Understanding the basics of SQL, its categories (DDL, DML, DCL), and common RDBMS will lay a strong foundation for working with databases.
    - In the next guide, we will explore practical lessons with hands-on examples using SQLite.
+
+### **Next Lessons**: 
+   - [SQLite Guide: Building a Travel Booking System](SQL_in_Action.md)
+   - [SQL Functions and Aggregations](SQL_in_Action_2.md)
