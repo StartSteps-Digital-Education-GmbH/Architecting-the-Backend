@@ -12,6 +12,7 @@
 --     name TEXT NOT NULL,
 --     email TEXT NOT NULL UNIQUE
 -- );
+--  SQL Data Manipulation(Insert, Update, Delete) queries:
 -- INSERT INTO Flights (origin, destination,departure_time,arrival_time, price)
 -- VALUES ('Paris', 'Berlin', '2024-10-01 08:00', '2024-10-01 20:00', 500);
 -- SELECT * FROM Flights;
@@ -56,8 +57,7 @@
 -- VALUES (2, 3, '2024-09-16');
 -- INSERT INTO Bookings (user_id, flight_id, booking_date) 
 -- VALUES (1, 4, '2024-09-17');
--- SELECT * FROM Bookings;
--- SELECT * FROM Flights;
+-- SQL Aggregates functions
 -- SELECT COUNT(*) AS total_flights FROM flights;
 -- SELECT COUNT(*) AS user_total FROM Users;
 -- SELECT COUNT(*) from flights WHERE price> 630;
@@ -74,24 +74,9 @@
 -- VALUES ('Los Angeles', 'Berlin', '2024-12-01 07:30', '2024-12-01 19:00', 2000.00);
 -- INSERT INTO Flights (origin, destination, departure_time, arrival_time, price) 
 -- VALUES ('New York', 'Tokyo', '2024-10-10 09:00', '2024-10-10 21:00', 100.00);
--- SELECT * FROM Flights;
 -- SELECT origin, AVG(Price), SUM(Price) FROM FLights GROUP BY origin;
 -- SELECT origin, AVG(Price), SUM(Price) FROM FLights GROUP BY origin HAVING SUM(price)> 1000;
-SELECT
-    *
-FROM
-    USERS;
-
-SELECT
-    *
-FROM
-    Bookings;
-
-SELECT
-    *
-FROM
-    Flights;
-
+--  SQL JOINS
 -- SELECT Users.name, Bookings.booking_date
 -- FROM Bookings INNER JOIN USERS ON Bookings.user_id = Users.user_id;
 -- SELECT Users.name, Bookings.booking_date, Flights.origin, Flights.destination
@@ -123,13 +108,30 @@ FROM
 --     users
 --     INNER Join bookings ON users.user_id = bookings.user_id
 --     INNER JOIN flights ON bookings.flight_id = flights.flight_id WHERE flights.price=600 OR flights.origin = 'Paris';
-
 -- sum of all flights booking per user
+-- SELECT
+--     users.name,
+--     sum(flights.price)
+-- FROM
+--     users
+--     INNER Join bookings ON users.user_id = bookings.user_id
+--     INNER JOIN flights ON bookings.flight_id = flights.flight_id
+-- GROUP BY
+--     users.name;
+
+-- SQL Subqueries
+SELECt
+    MAX(price)
+FROM
+    flights;
+
 SELECT
     users.name,
-    sum(flights.price)
+    bookings.booking_date,
+    flights.origin,
+    flights.destination,
+    flights.price
 FROM
-    users
-    INNER Join bookings ON users.user_id = bookings.user_id
-    INNER JOIN flights ON bookings.flight_id = flights.flight_id GROUP BY users.name;
-
+    bookings
+    INNER JOIN users ON users.user_id = bookings.user_id
+    INNER JOIN flights ON flights.flight_id = bookings.flight_id;  
