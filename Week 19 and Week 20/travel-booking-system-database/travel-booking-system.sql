@@ -111,3 +111,16 @@
 -- SELECT origin, AVG(Price), SUM(Price) FROM FLights GROUP BY origin;
 
 -- SELECT origin, AVG(Price), SUM(Price) FROM FLights GROUP BY origin HAVING SUM(price)> 1000;
+
+
+SELECT * FROM USERS;
+
+SELECT * FROM Bookings;
+
+SELECT * FROM Flights;
+
+-- SELECT Users.name, Bookings.booking_date
+-- FROM Bookings INNER JOIN USERS ON Bookings.user_id = Users.user_id;
+
+SELECT Users.name, Bookings.booking_date, Flights.origin, Flights.destination
+FROM Bookings INNER JOIN USERS ON Bookings.user_id = Users.user_id INNER JOIN Flights ON Bookings.flight_id = Flights.flight_id;
