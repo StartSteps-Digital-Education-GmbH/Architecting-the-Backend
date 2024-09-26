@@ -96,21 +96,40 @@ FROM
 -- FROM Bookings INNER JOIN USERS ON Bookings.user_id = Users.user_id;
 -- SELECT Users.name, Bookings.booking_date, Flights.origin, Flights.destination
 -- FROM Bookings INNER JOIN USERS ON Bookings.user_id = Users.user_id INNER JOIN Flights ON Bookings.flight_id = Flights.flight_id;
-SELECT
-    Users.name,
-    Bookings.booking_id,
-    Bookings.booking_date
-FROM
-    Users
-    LEFT JOIN Bookings ON Users.user_id = Bookings.user_id;
+-- SELECT
+--     Users.name,
+--     Bookings.booking_id,
+--     Bookings.booking_date
+-- FROM
+--     Users
+--     LEFT JOIN Bookings ON Users.user_id = Bookings.user_id;
+-- SELECT
+--     Users.name,
+--     Bookings.booking_id,
+--     Bookings.booking_date,
+--     flights.origin,
+--     flights.destination
+-- FROM
+--     Users
+--     LEFT JOIN Bookings ON Users.user_id = Bookings.user_id
+--     LEFT JOIN Flights ON Bookings.flight_id = flights.flight_id;
+-- SELECT users.name, flights.origin, flights.destination FROM Users CROSS JOIN Flights;
+-- SELECT
+--     users.name,
+--     booking_date,
+--     flights.price,
+--     flights.origin
+-- FROM
+--     users
+--     INNER Join bookings ON users.user_id = bookings.user_id
+--     INNER JOIN flights ON bookings.flight_id = flights.flight_id WHERE flights.price=600 OR flights.origin = 'Paris';
 
+-- sum of all flights booking per user
 SELECT
-    Users.name,
-    Bookings.booking_id,
-    Bookings.booking_date,
-    flights.origin,
-    flights.destination
+    users.name,
+    sum(flights.price)
 FROM
-    Users
-    LEFT JOIN Bookings ON Users.user_id = Bookings.user_id
-    LEFT JOIN Flights ON Bookings.flight_id = flights.flight_id;
+    users
+    INNER Join bookings ON users.user_id = bookings.user_id
+    INNER JOIN flights ON bookings.flight_id = flights.flight_id GROUP BY users.name;
+

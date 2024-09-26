@@ -87,3 +87,4 @@
    - [SQLite Guide: Building a Travel Booking System](01_SQL_in_Action.md)
    - [SQLite Guide: Working with Aggregation Functions](02_SQL_in_Action_2.md)
    - [SQLite Guide: Table Joins](03_SQL_Joins.md)
+   - [SQLite Guide: Subqueries and Nested Queries](04_Nested_Queries.md)
