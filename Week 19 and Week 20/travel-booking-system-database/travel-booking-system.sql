@@ -79,6 +79,35 @@
 
 -- SELECT * FROM Flights;
 
-SELECT SUM(Flights.price) AS total_price FROM Flights;
+-- SELECT COUNT(*) AS total_flights FROM flights;
+-- SELECT COUNT(*) AS user_total FROM Users;
 
--- SELECT * FROM Flights WHERE price>600;
+-- SELECT COUNT(*) from flights WHERE price> 630;
+
+-- SELECT SUM(price) AS total_sum from flights;
+
+-- SELECT SUM(price) from flights WHERE price> 630;
+
+-- SELECT AVG(price) FROM flights;
+-- SELECT AVG(price) FROM flights WHERE price >= 650;
+
+-- SELECT MAX(price) AS max_price FROM flights;
+
+-- SELECT MIN(price) AS max_price FROM flights;
+
+-- SELECT MAX(price) AS max_price FROM flights WHERE price<650;
+
+-- INSERT INTO Flights (origin, destination, departure_time, arrival_time, price) 
+-- VALUES ('San Francisco', 'Paris', '2024-11-01 06:00', '2024-11-01 18:00', 900.00);
+
+-- INSERT INTO Flights (origin, destination, departure_time, arrival_time, price) 
+-- VALUES ('Los Angeles', 'Berlin', '2024-12-01 07:30', '2024-12-01 19:00', 2000.00);
+
+-- INSERT INTO Flights (origin, destination, departure_time, arrival_time, price) 
+-- VALUES ('New York', 'Tokyo', '2024-10-10 09:00', '2024-10-10 21:00', 100.00);
+
+-- SELECT * FROM Flights;
+
+-- SELECT origin, AVG(Price), SUM(Price) FROM FLights GROUP BY origin;
+
+-- SELECT origin, AVG(Price), SUM(Price) FROM FLights GROUP BY origin HAVING SUM(price)> 1000;
