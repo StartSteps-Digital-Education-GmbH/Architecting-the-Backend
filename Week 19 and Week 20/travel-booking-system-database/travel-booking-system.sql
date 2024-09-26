@@ -122,5 +122,13 @@ SELECT * FROM Flights;
 -- SELECT Users.name, Bookings.booking_date
 -- FROM Bookings INNER JOIN USERS ON Bookings.user_id = Users.user_id;
 
-SELECT Users.name, Bookings.booking_date, Flights.origin, Flights.destination
-FROM Bookings INNER JOIN USERS ON Bookings.user_id = Users.user_id INNER JOIN Flights ON Bookings.flight_id = Flights.flight_id;
+-- SELECT Users.name, Bookings.booking_date, Flights.origin, Flights.destination
+-- FROM Bookings INNER JOIN USERS ON Bookings.user_id = Users.user_id INNER JOIN Flights ON Bookings.flight_id = Flights.flight_id;
+
+-- SELECT Users.name, Bookings.booking_id, Bookings.booking_date FROM Users LEFT JOIN Bookings 
+-- ON Users.user_id = Bookings.user_id;
+
+SELECT Users.name, Bookings.booking_id, Bookings.booking_date, flights.origin, flights.destination
+FROM Users LEFT JOIN Bookings ON Users.user_id = Bookings.user_id 
+LEFT JOIN Flights ON Bookings.flight_id = flights.flight_id;
+
