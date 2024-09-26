@@ -84,5 +84,6 @@
    - In the next guide, we will explore practical lessons with hands-on examples using SQLite.
 
 ### **Next Lessons**: 
-   - [SQLite Guide: Building a Travel Booking System](SQL_in_Action.md)
-   - [SQLite Guide: Working with Aggregation Functions](SQL_in_Action_2.md)
+   - [SQLite Guide: Building a Travel Booking System](01_SQL_in_Action.md)
+   - [SQLite Guide: Working with Aggregation Functions](02_SQL_in_Action_2.md)
+   - [SQLite Guide: Table Joins](03_SQL_Joins.md)
