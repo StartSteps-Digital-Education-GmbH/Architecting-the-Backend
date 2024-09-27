@@ -118,20 +118,69 @@
 --     INNER JOIN flights ON bookings.flight_id = flights.flight_id
 -- GROUP BY
 --     users.name;
-
 -- SQL Subqueries
-SELECt
-    MAX(price)
-FROM
+-- SELECt
+--     MAX(price)
+-- FROM
+--     flights;
+-- SELECT
+--     users.name,
+--     bookings.booking_date,
+--     flights.origin,
+--     flights.destination,
+--     flights.price
+-- FROM
+--     bookings
+--     INNER JOIN users ON users.user_id = bookings.user_id
+--     INNER JOIN flights ON flights.flight_id = bookings.flight_id;
+-- SELECT
+--     users.name,
+--     bookings.booking_date,
+--     flights.origin,
+--     flights.destination,
+--     flights.price,
+--     (
+--         SELECt
+--             MAX(price)
+--         FROM
+--             flights
+--     ) AS max_price
+-- FROM
+--     bookings
+--     INNER JOIN users ON users.user_id = bookings.user_id
+--     INNER JOIN flights ON flights.flight_id = bookings.flight_id;
+-- select * from flights;
+-- INSERT into bookings (user_id, flight_id, booking_date)  VALUES (1, 7, '2024-08-11');
+-- INSERT into bookings (user_id, flight_id, booking_date)  VALUES (3, 7, '2024-08-12');
+-- Select * from bookings;
+select
+    flight_id,
+    min(price)
+from
     flights;
 
-SELECT
-    users.name,
-    bookings.booking_date,
-    flights.origin,
-    flights.destination,
-    flights.price
-FROM
+-- flight_id = 7
+Select
+    user_id
+from
     bookings
+where
+    flight_id = 7;
+
+-- using subquery to do the same
+Select
+    bookings.user_id,
+    users.name,
+    flights.origin,
+    flights.price
+from
+    bookings
+    INNER JOIN flights ON flights.flight_id = bookings.flight_id
     INNER JOIN users ON users.user_id = bookings.user_id
-    INNER JOIN flights ON flights.flight_id = bookings.flight_id;  
+WHERE
+    flights.price = (
+        select
+            min(price)
+        from
+            flights
+    );
