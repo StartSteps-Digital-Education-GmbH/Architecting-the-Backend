@@ -149,38 +149,67 @@
 --     bookings
 --     INNER JOIN users ON users.user_id = bookings.user_id
 --     INNER JOIN flights ON flights.flight_id = bookings.flight_id;
--- select * from flights;
+
+-- USING SUBQUERIES IN WHERE CLAUSE:
 -- INSERT into bookings (user_id, flight_id, booking_date)  VALUES (1, 7, '2024-08-11');
 -- INSERT into bookings (user_id, flight_id, booking_date)  VALUES (3, 7, '2024-08-12');
 -- Select * from bookings;
-select
-    flight_id,
-    min(price)
-from
-    flights;
 
+-- select
+--     flight_id,
+--     min(price)
+-- from
+--     flights;
 -- flight_id = 7
-Select
-    user_id
-from
-    bookings
-where
-    flight_id = 7;
-
+-- Select
+--     user_id
+-- from
+--     bookings
+-- where
+--     flight_id = 7;
 -- using subquery to do the same
-Select
-    bookings.user_id,
-    users.name,
-    flights.origin,
-    flights.price
+-- Select
+--     bookings.user_id,
+--     users.name,
+--     flights.origin,
+--     flights.price
+-- from
+--     bookings
+--     INNER JOIN flights ON flights.flight_id = bookings.flight_id
+--     INNER JOIN users ON users.user_id = bookings.user_id
+-- WHERE
+--     flights.price = (
+--         select
+--             min(price)
+--         from
+--             flights
+--     );
+-- USING SUBQURIES IN FROM CLAUSE:
+select
+    *
+from
+    bookings;
+
+select
+    user_id,
+    count(*) AS total_flight
 from
     bookings
-    INNER JOIN flights ON flights.flight_id = bookings.flight_id
-    INNER JOIN users ON users.user_id = bookings.user_id
-WHERE
-    flights.price = (
+GROUP BY
+    user_id;
+
+SELECT
+    users.user_id,
+    users.name,
+    temp_flight_counts_table.total_flight
+from
+    users
+    INNER JOIN (
         select
-            min(price)
+            user_id,
+            count(*) AS total_flight
         from
-            flights
-    );
+            bookings
+        GROUP BY
+            user_id
+    ) as temp_flight_counts_table ON users.user_id = temp_flight_counts_table.user_id;
