@@ -129,9 +129,9 @@ We want to list all flights that have been booked by users who have email addres
 
 #### **Query Example:**
 ```sql
-SELECT Flights.origin, Flights.destination, Flights.price
+SELECT origin, destination, price
 FROM Flights
-WHERE Flights.flight_id IN (
+WHERE flight_id IN (
     SELECT Bookings.flight_id
     FROM Bookings
     INNER JOIN Users ON Bookings.user_id = Users.user_id

@@ -119,6 +119,7 @@
 -- GROUP BY
 --     users.name;
 -- SQL Subqueries
+-- USING sub queries in SELECT:
 -- SELECt
 --     MAX(price)
 -- FROM
@@ -149,12 +150,10 @@
 --     bookings
 --     INNER JOIN users ON users.user_id = bookings.user_id
 --     INNER JOIN flights ON flights.flight_id = bookings.flight_id;
-
 -- USING SUBQUERIES IN WHERE CLAUSE:
 -- INSERT into bookings (user_id, flight_id, booking_date)  VALUES (1, 7, '2024-08-11');
 -- INSERT into bookings (user_id, flight_id, booking_date)  VALUES (3, 7, '2024-08-12');
 -- Select * from bookings;
-
 -- select
 --     flight_id,
 --     min(price)
@@ -185,31 +184,83 @@
 --             flights
 --     );
 -- USING SUBQURIES IN FROM CLAUSE:
+-- select
+--     *
+-- from
+--     bookings;
+-- select
+--     user_id,
+--     count(*) AS total_flight
+-- from
+--     bookings
+-- GROUP BY
+--     user_id;
+-- SELECT
+--     users.user_id,
+--     users.name,
+--     temp_flight_counts_table.total_flight
+-- from
+--     users
+--     INNER JOIN (
+--         select
+--             user_id,
+--             count(*) AS total_flight
+--         from
+--             bookings
+--         GROUP BY
+--             user_id
+--     ) as temp_flight_counts_table ON users.user_id = temp_flight_counts_table.user_id;
+-- Subquery with `EXISTS`
+-- select * from bookings;
+-- -- insert into users (name, email) values ('user 4', 'user4@test.com');
+-- select * from users;
+-- -- I want to see all users who havn't done any booking "NOT EXISTS"
+-- select users.name from users WHERE NOT EXISTS (
+--     select Null FROM bookings where bookings.user_id = users.user_id
+-- );
+--  Subquery with `IN`
+-- select
+--     users.name, users.email, bookings.flight_id
+-- from
+--     bookings
+--     Inner Join users ON bookings.user_id = users.user_id
+-- where
+--     users.email LIKE '%@example.com';
+-- 
+-- select
+--     flight_id origin,
+--     destination,
+--     price
+-- FROM
+--     flights where flight_id IN (3, 7);
+-- lets combine them to make the query dynamic(not use spesific values)
 select
-    *
-from
-    bookings;
-
-select
-    user_id,
-    count(*) AS total_flight
-from
-    bookings
-GROUP BY
-    user_id;
-
-SELECT
-    users.user_id,
-    users.name,
-    temp_flight_counts_table.total_flight
-from
-    users
-    INNER JOIN (
+    flight_id,
+    origin,
+    destination,
+    price
+FROM
+    flights
+where
+    flight_id IN (
         select
-            user_id,
-            count(*) AS total_flight
+            bookings.flight_id
         from
             bookings
-        GROUP BY
-            user_id
-    ) as temp_flight_counts_table ON users.user_id = temp_flight_counts_table.user_id;
+            Inner Join users ON bookings.user_id = users.user_id
+        where
+            users.email LIKE '%@example.com'
+    );
+
+select
+    flights.flight_id,
+    flights.origin,
+    flights.destination,
+    flights.price,
+    users.email
+FROM
+    flights
+    INNER join bookings ON bookings.flight_id = flights.flight_id
+    INNER JOIN users ON users.user_id = bookings.user_id
+where
+    users.email LIKE '%@example.com';
