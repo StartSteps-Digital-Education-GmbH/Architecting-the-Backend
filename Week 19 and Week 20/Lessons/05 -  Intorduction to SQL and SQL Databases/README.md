@@ -84,7 +84,16 @@
    - In the next guide, we will explore practical lessons with hands-on examples using SQLite.
 
 ### **Next Lessons**: 
-   - [SQLite Guide: Building a Travel Booking System](01_SQL_in_Action.md)
-   - [SQLite Guide: Working with Aggregation Functions](02_SQL_in_Action_2.md)
-   - [SQLite Guide: Table Joins](03_SQL_Joins.md)
-   - [SQLite Guide: Subqueries and Nested Queries](04_Nested_Queries.md)
+   - [Building a Travel Booking System](01_SQL_in_Action.md)
+   - [Working with Aggregation Functions](02_SQL_in_Action_2.md)
+   - [Table Joins](03_SQL_Joins.md)
+   - [Subqueries and Nested Queries](04_Nested_Queries.md)
+   - [SQL Constraints](05_SQL_Contstraints.md)
+
+### **Cheatsheet**:
+   - [SQL DML and DDL Cheatsheet](DDL_DML_Cheatsheet.md)
+
+### **References**:
+   - [SQL Tutorial by W3Schools](https://www.w3schools.com/sql/)
+   - [SQL Course on Codecademy](https://www.codecademy.com/learn/learn-sql)
+   - [SQLite Documentation](https://www.sqlite.org/docs.html)
