@@ -1,4 +1,4 @@
-### **Learning Guide: SQL Constraints in the Travel Booking System**
+### **Learning Guide: SQL Constraints**
 
 In this guide, we’ll explore SQL constraints using our travel booking system schema. Constraints enforce rules on the data, ensuring its accuracy and integrity. We'll update the existing tables and introduce a new table where necessary.
 

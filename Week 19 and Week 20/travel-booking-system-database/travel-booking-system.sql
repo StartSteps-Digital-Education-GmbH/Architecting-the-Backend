@@ -234,33 +234,63 @@
 -- FROM
 --     flights where flight_id IN (3, 7);
 -- lets combine them to make the query dynamic(not use spesific values)
-select
-    flight_id,
-    origin,
-    destination,
-    price
-FROM
-    flights
-where
-    flight_id IN (
-        select
-            bookings.flight_id
-        from
-            bookings
-            Inner Join users ON bookings.user_id = users.user_id
-        where
-            users.email LIKE '%@example.com'
-    );
+-- select
+--     flight_id,
+--     origin,
+--     destination,
+--     price
+-- FROM
+--     flights
+-- where
+--     flight_id IN (
+--         select
+--             bookings.flight_id
+--         from
+--             bookings
+--             Inner Join users ON bookings.user_id = users.user_id
+--         where
+--             users.email LIKE '%@example.com'
+--     );
 
-select
-    flights.flight_id,
-    flights.origin,
-    flights.destination,
-    flights.price,
-    users.email
-FROM
-    flights
-    INNER join bookings ON bookings.flight_id = flights.flight_id
-    INNER JOIN users ON users.user_id = bookings.user_id
-where
-    users.email LIKE '%@example.com';
+-- select
+--     flights.flight_id,
+--     flights.origin,
+--     flights.destination,
+--     flights.price,
+--     users.email
+-- FROM
+--     flights
+--     INNER join bookings ON bookings.flight_id = flights.flight_id
+--     INNER JOIN users ON users.user_id = bookings.user_id
+-- where
+--     users.email LIKE '%@example.com';
+
+
+-- TODO Check the error
+-- ALTER TABLE Flights
+-- ADD CHECK (price > 0);
+
+-- CREATE TABLE Payments (
+--     payment_id INTEGER PRIMARY KEY,
+--     booking_id INTEGER,
+--     amount REAL NOT NULL CHECK(amount > 0),
+--     payment_date TEXT NOT NULL,
+--     payment_method TEXT CHECK(payment_method IN ('Credit Card', 'Debit Card', 'PayPal')),
+--     FOREIGN KEY (booking_id) REFERENCES Bookings(booking_id)
+-- );
+
+-- INSERT INTO Users (name, email, age)
+-- VALUES ('Sarah Connor', 'sconnor@example.com', 28);
+
+-- Valid Flight Insertion
+-- INSERT INTO Flights (origin, destination, departure_time, arrival_time, price)
+-- VALUES ('New York', 'Los Angeles', '2024-12-01 08:00', '2024-12-01 11:00', 300);
+
+-- INSERT INTO Users (name, email, age)
+-- VALUES ('Jane Doe', 'jdoe@example.com', 32);
+
+
+-- Indixing
+
+
+
