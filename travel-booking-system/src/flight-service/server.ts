@@ -1,31 +1,20 @@
 import express from 'express';
 import router from './flightRoutes.js';
-import mongoose from 'mongoose';
+import {AppDataSource} from '../database/ormconfig.js' 
 import dotenv from 'dotenv';
 
 dotenv.config();
 const app = express();
 
-const PORT = process.env.FLIGHT_SERVICES_PATH || 3002;
-
-// app.use(express.json());
 app.use('/api/flights',router);
-const connecDB = async () => {
-    try {
-        if(process.env.MONGODB_URI) {
-            await mongoose.connect(process.env.MONGODB_URI);
-            console.log("Database connected");
-        } else {
-            console.log("Error in connecting to the DB: No MongoDB_URI provided");
-        }
+
+const connectToSQL  = async () => {
+    try{
+        await AppDataSource.initialize();
+        console.log('SQLite database connect');
     } catch (error) {
-        console.log("Error in connecting to the DB", error)
+        console.log('Error in connecting to DB', error);
     }
 }
 
-//in Serverless we dont need to create server 
-// app.listen(PORT, () => {
-//     console.log(`the flight server is open at port: ${PORT}`)
-// })
-
-export {app, connecDB};
+export {app, connectToSQL };
