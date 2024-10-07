@@ -1,6 +1,3 @@
-Here's a guide on MongoDB, featuring examples with Mongoose to help you and your students get started effectively!
-
----
 
 # MongoDB and Mongoose: A Comprehensive Guide
 
