@@ -23,9 +23,4 @@ const connecDB = async () => {
     }
 }
 
-//in Serverless we dont need to create server 
-// app.listen(PORT, () => {
-//     console.log(`the flight server is open at port: ${PORT}`)
-// })
-
 export {app, connecDB};

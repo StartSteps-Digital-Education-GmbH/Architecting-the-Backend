@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document } from "mongoose";
-// Flight interface to define the structure of a flight
 export interface IFlight extends Document {
     origin: string;
     destination: string;
