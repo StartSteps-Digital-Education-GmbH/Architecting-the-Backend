@@ -24,3 +24,4 @@ const Flight = mongoose.model<IFlight>('Flight', flightSchema)
 
 
 export default Flight;
+export {flightSchema};
