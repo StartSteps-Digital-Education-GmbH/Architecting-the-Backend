@@ -3,7 +3,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 
 const handeler = async (req: VercelRequest, res: VercelResponse) => {
     await connectDB();
-    await app(req,res)
+    await app(req,res);
 }
 
 export default handeler;

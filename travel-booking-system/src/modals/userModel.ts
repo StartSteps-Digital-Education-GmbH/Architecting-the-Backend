@@ -16,6 +16,7 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
+    //array of bookings
 })
 
 const User  = mongoose.model<IUser>('User', userSchema)
