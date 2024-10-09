@@ -29,7 +29,11 @@ const get =  async (req: Request, res: Response) => {
             price: sortByPrice
         }
     }
-    const flights = await Flight.find(filter).sort(sortBy);
+    const page = parseInt(req.query.page || 1);
+    const limit = parseInt(req.query.limit || 0);
+    const flights = await Flight.find(filter, {
+        __v: 0
+    }).sort(sortBy).skip((page-1)*limit).limit(limit);
     res.status(200).send(flights);
 };
 
@@ -71,9 +75,17 @@ const updateById = async (req: Request, res: Response) => {
 const getAveragePrice = async (req: Request, res: Response) => {
     const groupBy = req.query.groupBy || "$origin"
     const flights = await Flight.aggregate([
-        {$group: {_id: groupBy, averagePrice: {$avg: "$price"}}} //give us the avreage price for each origin
+        {$group: {_id: groupBy, averagePrice: {$avg: "$price"}}} //give us the avreage price for each origin,destination
     ]);
     res.status(200).send(flights);
 }
 
-export default {get, getByID, create, remove, updateById, getAveragePrice};
+const getNumberOfFlights = async (req: Request, res: Response) => {
+    const groupBy = req.query.groupBy || "$origin"
+    const flights = await Flight.aggregate([
+        {$group: {_id: groupBy, count: {$sum: 1}}} //give us number of flights from a spesific origin,destination or price
+    ]);
+    res.status(200).send(flights);
+}
+
+export default {get, getByID, create, remove, updateById, getAveragePrice, getNumberOfFlights};
