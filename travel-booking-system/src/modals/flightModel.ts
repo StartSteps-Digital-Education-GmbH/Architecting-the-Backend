@@ -17,7 +17,7 @@ const flightSchema = new Schema({
     price: {
         type: Number,
         requred: true
-    }
+    },
 });
 
 const Flight = mongoose.model<IFlight>('Flight', flightSchema)

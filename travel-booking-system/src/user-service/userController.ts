@@ -1,8 +1,10 @@
 import { Request,Response } from "express";
 import User from "../modals/userModel.js";
+import { queryParser } from "../utils/index.js";
 
 const get = async (req: Request,res: Response) => {
-    const users = await User.find();
+    const filter = queryParser(req.query, ['name', 'email'])
+    const users = await User.find(filter);
     res.send(users);
 };
 

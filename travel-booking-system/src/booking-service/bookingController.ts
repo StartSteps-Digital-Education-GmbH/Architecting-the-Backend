@@ -2,9 +2,12 @@ import Booking from "../modals/bookingModel.js";
 import User from "../modals/userModel.js";
 import Flight from '../modals/flightModel.js';
 import { Request, Response } from "express";
+import { queryParser } from "../utils/index.js";
 
 const get = async (req: Request, res: Response) => {
-    const bookings = await Booking.find();
+    const filter = queryParser(req.query, ['status']);
+    const bookings = await Booking.find(filter);
+    bookings.filter
     res.status(200).send(bookings);
 }
 

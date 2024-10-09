@@ -1,4 +1,4 @@
-import { app, connecDB } from "../src/flight-service/server.js";
+import { app, connecDB } from "../src/flight-service/index.js";
 import { VercelRequest, VercelResponse } from "@vercel/node";
 
 const handeler = async (req: VercelRequest, res: VercelResponse) => {

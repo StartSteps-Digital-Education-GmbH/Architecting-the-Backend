@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import axios from 'axios';
 import Flight from '../modals/flightModel.js';
 import User from '../modals/userModel.js';
+import { queryParser } from '../utils/index.js';
 
 const create = async (req: Request, res: Response) => {
     try {
@@ -24,7 +25,9 @@ const create = async (req: Request, res: Response) => {
 }
 
 const get =  async (req: Request, res: Response) => {
-    const flights = await Flight.find();
+    const filter = queryParser(req.query, ['origin', 'destination']);
+    // const sortByPrice = req.query?.sortByPrice === 'desc' ? -1 : 1; //-1 in MongoDB sort means descinding order
+    const flights = await Flight.find(filter);
     res.status(200).send(flights); // Respond with the list of flights
 };
 

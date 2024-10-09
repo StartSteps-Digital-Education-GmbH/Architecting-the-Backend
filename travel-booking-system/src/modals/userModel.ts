@@ -16,8 +16,19 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    //array of bookings
+    age: {
+        type: Number,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 })
+
+userSchema.pre('find',(next)=> {
+    console.log('find data from database');
+    next();
+});
 
 const User  = mongoose.model<IUser>('User', userSchema)
 export default User;
