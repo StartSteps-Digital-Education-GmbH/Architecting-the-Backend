@@ -14,10 +14,6 @@ const flightSchema = Joi.object({
         'number.base': 'Price must be a Number',
         'any.required': 'Price is required'
     }),
-    userId: Joi.string().required().messages({
-        'string.base': 'userID must be a string',
-        'any.required': 'userID is required'
-    })
 });
 
 const validator = (req: Request, res: Response, next: NextFunction) => {

@@ -6,11 +6,7 @@ import { queryParser } from '../utils/index.js';
 
 const create = async (req: Request, res: Response) => {
     try {
-    const { origin, destination, price, userId } = req.body;
-        const user = await User.findById(userId);
-        if(!user) {
-            return res.status(404).send("User not found");
-        }
+    const { origin, destination, price } = req.body;
         const newFlight = {
             origin,
             destination,
@@ -18,7 +14,7 @@ const create = async (req: Request, res: Response) => {
         };
         const flight = new Flight(newFlight);
         await flight.save();
-        res.status(201).send(newFlight);
+        res.status(201).send(flight);
     } catch (error: any) {
         return res.status(error.status || 500).send({message:error.message, userMessage: "Somthing went wrong"});
     }
@@ -26,9 +22,15 @@ const create = async (req: Request, res: Response) => {
 
 const get =  async (req: Request, res: Response) => {
     const filter = queryParser(req.query, ['origin', 'destination']);
-    // const sortByPrice = req.query?.sortByPrice === 'desc' ? -1 : 1; //-1 in MongoDB sort means descinding order
-    const flights = await Flight.find(filter);
-    res.status(200).send(flights); // Respond with the list of flights
+    const sortByPrice = req.query.sortByPrice; //accepted values = asc, desc,ascending, descending
+    let sortBy = {};
+    if(sortByPrice) { 
+        sortBy = {
+            price: sortByPrice
+        }
+    }
+    const flights = await Flight.find(filter).sort(sortBy);
+    res.status(200).send(flights);
 };
 
 const getByID = async (req: Request, res: Response) => {
@@ -38,7 +40,7 @@ const getByID = async (req: Request, res: Response) => {
         if (!flight) {
             return res.status(404).send({ message: 'Flight not found' });
         }
-        res.status(200).send(flight); // Respond with the found flight
+        res.status(200).send(flight);
     } catch(error) {
         res.status(500).send(error);
     }
@@ -53,8 +55,7 @@ const remove = async (req: Request, res: Response) => {
 const updateById = async (req: Request, res: Response) => {
     try {
         const {id} = req.params;
-        const {origin, destination, price, userId} = req.body;
-        await axios.get(`http://localhost:${process.env.USER_SERVICES_PATH}/users/${userId}`);
+        const {origin, destination, price} = req.body;
         const updatedFight = await Flight.findByIdAndUpdate(id, {
             origin,
             destination,
@@ -67,4 +68,12 @@ const updateById = async (req: Request, res: Response) => {
     }
 }
 
-export default {get, getByID, create, remove, updateById};
+const getAveragePrice = async (req: Request, res: Response) => {
+    const groupBy = req.query.groupBy || "$origin"
+    const flights = await Flight.aggregate([
+        {$group: {_id: groupBy, averagePrice: {$avg: "$price"}}} //give us the avreage price for each origin
+    ]);
+    res.status(200).send(flights);
+}
+
+export default {get, getByID, create, remove, updateById, getAveragePrice};

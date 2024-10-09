@@ -7,7 +7,6 @@ dotenv.config();
 const app = express();
 
 const PORT = process.env.USER_SERVICES_PATH || 3001;
-// app.use(express.json());
 app.use('/api/users',router);
 
 const connectDB = async () => {
@@ -22,10 +21,5 @@ const connectDB = async () => {
         console.log("Error in connecting to the DB", error)
     }
 }
-
-
-// app.listen(PORT, () => {
-//     console.log(`the user server is open at port: ${PORT}`)
-// })
 
 export {app, connectDB};

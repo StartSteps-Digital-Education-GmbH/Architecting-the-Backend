@@ -1,6 +1,4 @@
 import Booking from "../modals/bookingModel.js";
-import User from "../modals/userModel.js";
-import Flight from '../modals/flightModel.js';
 import { Request, Response } from "express";
 import { queryParser } from "../utils/index.js";
 
