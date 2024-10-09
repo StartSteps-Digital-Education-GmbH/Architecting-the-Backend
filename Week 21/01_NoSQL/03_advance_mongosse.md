@@ -1,210 +1,135 @@
-### 1. **Setting Up the Schemas**
+## Mongoose and MongoDB Guide: Advanced Features
 
-Let’s first define the schemas for the `User`, `Flight`, and `Booking` collections. Here’s an example of what each schema might look like:
+### Part 1: Adding Initial Data to Collections
 
-#### User Schema
+To ensure you have data to work with, let’s add a few records to each collection. This will help in visualizing the results of filtering, sorting, and aggregation.
+
+#### Adding Data to User Collection
 ```javascript
-const mongoose = require('mongoose');
+await User.create([
+    { name: 'Alice', email: 'alice@example.com', age: 28 },
+    { name: 'Bob', email: 'bob@example.com', age: 34 },
+    { name: 'Carol', email: 'carol@example.com', age: 22 }
+]);
+```
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  age: { type: Number, required: true },
-  createdAt: { type: Date, default: Date.now },
+#### Adding Data to Flight Collection
+```javascript
+await Flight.create([
+    { origin: 'New York', destination: 'Paris', price: 500 },
+    { origin: 'San Francisco', destination: 'London', price: 700 },
+    { origin: 'Los Angeles', destination: 'Tokyo', price: 850 }
+]);
+```
+
+#### Adding Data to Booking Collection
+```javascript
+// Assuming you have IDs for a user and a flight
+await Booking.create([
+    { user: 'User ObjectId Here', flight: 'Flight ObjectId Here', bookingDate: new Date(), status: 'confirmed' },
+    { user: 'User ObjectId Here', flight: 'Flight ObjectId Here', bookingDate: new Date(), status: 'Pending' }
+]);
+```
+
+### Part 2: Filtering Data
+
+Use filters to find records based on specific criteria. In Mongoose, filters are applied through the `.find()` method.
+
+#### Example: Get All Confirmed Bookings
+```javascript
+const confirmedBookings = await Booking.find({ status: 'confirmed' });
+console.log(confirmedBookings);
+```
+- **Explanation**: This query searches for all bookings where the `status` field is set to `'confirmed'`. Using `find()` with an object of key-value pairs applies the specified criteria to filter documents.
+
+### Part 3: Sorting Data
+
+Mongoose’s `.sort()` method allows you to order results based on specified fields. 
+
+#### Example: Sort Flights by Price (Ascending)
+```javascript
+const sortedFlights = await Flight.find().sort({ price: 1 });
+console.log(sortedFlights);
+```
+- **Explanation**: `{ price: 1 }` sorts the `Flight` documents by price in ascending order. A `-1` would sort in descending order.
+
+### Part 4: Aggregations
+
+Aggregation is used for more complex data processing, like calculating averages or creating group-based results. Mongoose’s `.aggregate()` function makes this easy.
+
+#### Example: Average Flight Price by Destination
+```javascript
+const avgPrice = await Flight.aggregate([
+    { $group: { _id: "$destination", averagePrice: { $avg: "$price" } } }
+]);
+console.log(avgPrice);
+```
+- **Explanation**: The `$group` stage groups documents by the `destination` field, calculating an `averagePrice` for each group using `$avg`. The `$avg` operator takes the specified field (`$price`) and averages the values across all documents in the group.
+
+#### Example: Count of Bookings Per Status
+```javascript
+const bookingCount = await Booking.aggregate([
+    { $group: { _id: "$status", count: { $sum: 1 } } }
+]);
+console.log(bookingCount);
+```
+- **Explanation**: Here, `$group` groups the `Booking` documents by `status`. The `$sum` operator, used as `$sum: 1`, increments the `count` for each document in the group. This will provide the count of bookings for each status.
+
+### Part 5: Updating CRUD Operations
+
+To integrate the new operations, we can modify the existing APIs or create new endpoints in our booking microservice. Let’s update a few methods to leverage these advanced features.
+
+#### Updating CRUD Operations in Booking API
+Example: Updating the `GET /bookings` API to include filtering by status and sorting by booking date.
+
+```javascript
+// Assuming Express.js route
+app.get('/bookings', async (req, res) => {
+    const { status } = req.query;
+    const query = status ? { status } : {};
+    
+    const bookings = await Booking.find(query).sort({ bookingDate: -1 });
+    res.json(bookings);
 });
-
-module.exports = mongoose.model('User', userSchema);
 ```
-
-#### Flight Schema
-```javascript
-const flightSchema = new mongoose.Schema({
-  destination: { type: String, required: true },
-  departureDate: { type: Date, required: true },
-  seatsAvailable: { type: Number, required: true },
-  price: { type: Number, required: true },
-});
-
-module.exports = mongoose.model('Flight', flightSchema);
-```
-
-#### Booking Schema
-```javascript
-const bookingSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  flight: { type: mongoose.Schema.Types.ObjectId, ref: 'Flight', required: true },
-  bookingDate: { type: Date, default: Date.now },
-  passengers: { type: Number, required: true },
-  totalAmount: { type: Number, required: true }
-});
-
-module.exports = mongoose.model('Booking', bookingSchema);
-```
-
-### 2. **Example Data Imports**
-
-Let’s add some sample data to `User`, `Flight`, and `Booking` collections for testing our advanced queries. This step is essential to have enough data for meaningful results when we run aggregation and filtering operations.
-
-```javascript
-// Sample Users
-const users = [
-  { name: 'Alice', email: 'alice@example.com', age: 30 },
-  { name: 'Bob', email: 'bob@example.com', age: 45 },
-  { name: 'Charlie', email: 'charlie@example.com', age: 25 },
-];
-
-// Sample Flights
-const flights = [
-  { destination: 'Paris', departureDate: new Date('2024-12-15'), seatsAvailable: 50, price: 500 },
-  { destination: 'Tokyo', departureDate: new Date('2024-12-20'), seatsAvailable: 20, price: 800 },
-  { destination: 'New York', departureDate: new Date('2024-12-18'), seatsAvailable: 30, price: 700 },
-];
-
-// Sample Bookings
-const bookings = [
-  { user: '<user_id_1>', flight: '<flight_id_1>', passengers: 2, totalAmount: 1000 },
-  { user: '<user_id_2>', flight: '<flight_id_2>', passengers: 1, totalAmount: 800 },
-];
-```
+- **Explanation**: This code retrieves all bookings and filters them by `status` if a query parameter is provided. It also sorts the bookings by `bookingDate` in descending order.
+Here's the revised guide for using Mongoose with MongoDB, focused on advanced database operations in your travel management system serverless microservices. We’ve replaced the Prisma Studio section with additional Mongoose features, while keeping your preferred six-part structure.
 
 ---
 
-### 3. **Advanced Queries**
+### Part 6: Additional Mongoose Features
 
-#### a. Filtering Data
-Let’s filter `Flight` documents to retrieve all flights with seats available greater than 25.
+#### Example: Counting Documents
 
 ```javascript
-Flight.find({ seatsAvailable: { $gt: 25 } })
-  .then(flights => console.log(flights))
-  .catch(err => console.error(err));
+const totalUsers = await User.countDocuments();
+console.log(`Total users: ${totalUsers}`);
 ```
 
-**Explanation:** Here, `$gt` is used for filtering data based on a condition where `seatsAvailable` is greater than `25`. The `$gt` stands for “greater than.”
+Explanation:
+- `countDocuments()`: Returns the total count of documents in the `User` collection.
+
+#### Example: Using `skip` and `limit` for Pagination
+
+```javascript
+const page = 1;
+const limit = 10;
+const paginatedUsers = await User.find().skip((page - 1) * limit).limit(limit);
+console.log(paginatedUsers);
+```
+
+Explanation:
+- `skip((page - 1) * limit)`: Skips a certain number of documents to get the specified page.
+- `limit(limit)`: Limits the number of documents returned to the specified `limit`.
+
+#### Example: Using Projections to Limit Fields
+
+```javascript
+const userNames = await User.find({}, { name: 1, _id: 0 });
+console.log(userNames);
+```
+
+Explanation:
+- `{ name: 1, _id: 0 }`: Only includes the `name` field in the result, excluding the `_id`.
 
 ---
-
-#### b. Sorting Data
-Now, let’s sort the flights based on the price in descending order.
-
-```javascript
-Flight.find().sort({ price: -1 })
-  .then(flights => console.log(flights))
-  .catch(err => console.error(err));
-```
-
-**Explanation:** Using `.sort({ price: -1 })` sorts the data by `price` in descending order (`-1`). For ascending order, you would use `1`.
-
----
-
-#### c. Aggregations
-
-##### i. Sum of Bookings
-Let’s calculate the total number of passengers across all bookings.
-
-```javascript
-Booking.aggregate([
-  { $group: { _id: null, totalPassengers: { $sum: "$passengers" } } }
-])
-  .then(result => console.log(result))
-  .catch(err => console.error(err));
-```
-
-**Explanation:** Here, `$sum: "$passengers"` sums up the `passengers` field for each document. The `$group` stage groups all documents, and `null` as `_id` means we’re not grouping by any particular field.
-
-##### ii. Average Price of Flights
-Let’s find the average price of all flights.
-
-```javascript
-Flight.aggregate([
-  { $group: { _id: null, averagePrice: { $avg: "$price" } } }
-])
-  .then(result => console.log(result))
-  .catch(err => console.error(err));
-```
-
-**Explanation:** `$avg: "$price"` calculates the average of the `price` field across all documents in the `Flight` collection.
-
-##### iii. Bookings by Destination
-Let’s find out how many bookings there are for each flight destination.
-
-```javascript
-Booking.aggregate([
-  {
-    $lookup: {
-      from: 'flights',
-      localField: 'flight',
-      foreignField: '_id',
-      as: 'flightInfo'
-    }
-  },
-  { $unwind: "$flightInfo" },
-  {
-    $group: {
-      _id: "$flightInfo.destination",
-      bookingCount: { $sum: 1 }
-    }
-  }
-])
-  .then(result => console.log(result))
-  .catch(err => console.error(err));
-```
-
-**Explanation:** 
-- `$lookup` is used to join the `Booking` collection with the `Flight` collection based on the `flight` ID field.
-- `$unwind` breaks down arrays (from the lookup) so each document is a single array item.
-- `$sum: 1` counts each document in the group (essentially counting the number of bookings per destination).
-
----
-
-#### d. Using Date Queries
-
-Let’s find all flights departing after December 17, 2024.
-
-```javascript
-Flight.find({ departureDate: { $gt: new Date('2024-12-17') } })
-  .then(flights => console.log(flights))
-  .catch(err => console.error(err));
-```
-
-**Explanation:** The `$gt` operator is also applicable for dates. Here, we’re retrieving flights with a `departureDate` after December 17, 2024.
-
----
-
-### 4. **Combining Operations**
-
-You can combine these advanced operations, such as sorting, filtering, and aggregations, to create more complex queries. For instance:
-
-```javascript
-Booking.aggregate([
-  {
-    $lookup: {
-      from: 'users',
-      localField: 'user',
-      foreignField: '_id',
-      as: 'userInfo'
-    }
-  },
-  {
-    $match: { "userInfo.age": { $gte: 30 } }
-  },
-  {
-    $group: { _id: "$flight", totalPassengers: { $sum: "$passengers" } }
-  },
-  {
-    $sort: { totalPassengers: -1 }
-  }
-])
-  .then(result => console.log(result))
-  .catch(err => console.error(err));
-```
-
-In this example:
-1. We join the `User` collection to add `userInfo` to each `Booking` document.
-2. We filter (`$match`) to only include bookings where the user’s age is 30 or older.
-3. We group the bookings by flight and count the total passengers for each flight.
-4. We sort the results by `totalPassengers` in descending order.
-
----
-
-With these examples, you’ll have a solid understanding of advanced Mongoose features, along with how to use them within the context of your travel management system's serverless microservices. You can experiment with different operations and combinations to suit specific application needs.
