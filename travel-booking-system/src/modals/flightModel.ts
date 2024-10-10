@@ -18,6 +18,10 @@ const flightSchema = new Schema({
         type: Number,
         requred: true
     },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 const Flight = mongoose.model<IFlight>('Flight', flightSchema)

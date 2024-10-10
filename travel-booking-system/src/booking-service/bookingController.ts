@@ -48,4 +48,21 @@ const remove = async(req: Request, res: Response) => {
     res.status(204).send();
 }
 
-export default {get, post, getById, update, remove};
+const getUser = async (req: Request, res: Response) => {
+    const {id} = req.params;
+    const booking = await Booking.findById(id).populate('user');
+    if(!booking) {
+        return res.status(404).send('Booking Not Found');
+    }
+    res.status(200).send(booking.user);
+}
+
+const getFlight = async (req: Request, res: Response) => {
+    const {id} = req.params;
+    const booking = await Booking.findById(id).populate('flight');
+    if(!booking) {
+        return res.status(404).send('Booking Not Found');
+    }
+    res.status(200).send(booking.flight);
+}
+export default {get, post, getById, update, remove, getUser, getFlight};
