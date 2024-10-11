@@ -17,9 +17,11 @@ This section outlines the fundamental standards and requirements for the **Trave
 
 #### 2. **Folder Structure**
 
+Make sure your folders have meaninngful structure, for example:
+
 - **Project Root**:
   - **`/api/`**: Holds the serverless functions for each microservice.
-  - **`/api/{microservice_name}/`**: Folder structure within each microservice.
+  - **`/{microservice_name}/`**: Folder structure within each microservice.
     - **`controllers/`**: Handles request processing and calls appropriate services.
     - **`models/`**: Database schemas and models.
     - **`routes/`**: Defines API routes.
@@ -28,27 +30,6 @@ This section outlines the fundamental standards and requirements for the **Trave
     - **`utils/`**: General utility functions (e.g., date formatting, data transformation).
   - **`/config/`**: Configuration files for the database, environment variables, etc.
   - **`/docs/`**: Contains project documentation such as API documentation and setup instructions.
-
-**Example Folder Structure:**
-
-```plaintext
-├── api/
-│   ├── users/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── middlewares/
-│   └── flights/
-│       ├── controllers/
-│       ├── models/
-│       ├── routes/
-│       ├── services/
-│       └── middlewares/
-├── config/
-├── tests/
-└── docs/
-```
 
 ---
 
