@@ -47,4 +47,7 @@ const remove =  async (req: Request,res: Response) => {
     res.status(204).send(); // Respond with no content
 }
 
+
+
+
 export default {get, getByID, create, update, remove};
