@@ -20,6 +20,30 @@ const signup = async (req: Request, res: Response) => {
     }
 }
 
+const signin = async (req: Request,res: Response) => {
+    const {email, password} = req.body;
+
+    try{
+        const user = await User.findOne({
+            email,
+        });
+        if(!user) {
+            return res.status(404).send('User Not Found!');
+        }
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        if(!isMatch){
+            return res.status(401).send('Password in wrong');
+        }
+
+        res.status(200).send('User Loge in');
+
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
 export default {
-    signup
+    signup,
+    signin
 }

@@ -7,6 +7,7 @@ const router  = Router();
 
 // Auth Routes
 router.post('/signup', authController.signup);
+router.post('/signin', authController.signin);
 
 router.get('/', userController.get);
 router.get('/:id', userController.getByID);
