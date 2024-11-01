@@ -1,9 +1,15 @@
 import { Router } from "express";
 import userController from "./userController.js";
 import userMiddleware from './middlewares.js'
+import authController from './authController.js'
 
 const router  = Router();
-console.log("request came here");
+
+// Auth Routes
+router.post('/signup', authController.signup);
+router.post('/signin', authController.signin);
+router.post('/refreshtoken', authController.handelRefreshTokenGeneration);
+
 //CRUD
 router.get('/', userController.get);
 router.get('/:id', userController.getByID);
