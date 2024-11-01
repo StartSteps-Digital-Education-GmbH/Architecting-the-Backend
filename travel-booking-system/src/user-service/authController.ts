@@ -3,9 +3,11 @@ import bcrypt from 'bcryptjs';
 import User from '../modals/userModel.js';
 import jwt from 'jsonwebtoken';
 import { IUser } from '../modals/userModel.js';
+import CryptoJS from 'crypto-js';
 
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 const JWT_SECRET = process.env.JWT_SECRET;
+// const FRONTEND_SECRET = process.env.FRONTEND_SECRET;
 
 const generateAccessToken = ({user, JWT_SECRET}: {
     user: IUser,
@@ -26,9 +28,16 @@ const generateRefreshToken = ({user, JWT_REFRESH_SECRET}:{
 
 const signup = async (req: Request, res: Response) => {
     const {name, email, password} = req.body;
-    //crypto library uncript the password
+    //If the password comes already encrypted from frntend
+    // if(!FRONTEND_SECRET) {
+    //     return res.status(500).send('Secret key missing');
+    // }
+    // const bytes = CryptoJS.AES.decrypt(password, FRONTEND_SECRET);
+    // const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8)
+    // console.log('decrypted password', decryptedPassword);
     try {
         const hashedPAssword = await bcrypt.hash(password, 10);
+        console.log('Hashed Password', hashedPAssword);
         const newUser = new User({
             name, 
             email,

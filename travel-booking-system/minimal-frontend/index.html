@@ -20,13 +20,14 @@
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const secretKey = 'YOUR_SECRET_KEY';  // Store securely or generate dynamically
+      const secretKey = '8ZswOid7cjlEv2NnNIeuj1kcV11pATEV';  // Store securely or generate dynamically
 
       // Encrypt the password using AES
       const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
+      console.log(encryptedPassword);
 
       // Send data to the backend
-      const response = await fetch('/api/users/signup', {
+      const response = await fetch('http://localhost:3000/api/users/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password: encryptedPassword })
