@@ -1,9 +1,32 @@
 import {Request, Response} from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../modals/userModel.js';
+import jwt from 'jsonwebtoken';
+import { IUser } from '../modals/userModel.js';
+
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
+
+const generateAccessToken = ({user, JWT_SECRET}: {
+    user: IUser,
+    JWT_SECRET: string,
+}) => {
+    const token = jwt.sign({id: user._id},JWT_SECRET,{expiresIn: '1h'})
+    return token;
+}
+
+const generateRefreshToken = ({user, JWT_REFRESH_SECRET}:{
+    user: IUser,
+    JWT_REFRESH_SECRET: string
+}) => {
+    const refreshToken = jwt.sign({id: user._id}, JWT_REFRESH_SECRET, {expiresIn: '7d'})
+    return refreshToken;
+}
+
+
 const signup = async (req: Request, res: Response) => {
     const {name, email, password} = req.body;
-
+    //crypto library uncript the password
     try {
         const hashedPAssword = await bcrypt.hash(password, 10);
         const newUser = new User({
@@ -22,7 +45,6 @@ const signup = async (req: Request, res: Response) => {
 
 const signin = async (req: Request,res: Response) => {
     const {email, password} = req.body;
-
     try{
         const user = await User.findOne({
             email,
@@ -35,15 +57,61 @@ const signin = async (req: Request,res: Response) => {
         if(!isMatch){
             return res.status(401).send('Password in wrong');
         }
+        if(!JWT_SECRET) {
+            return res.status(500).send('Secret Not Found');
+        }
+        const token = generateAccessToken({user, JWT_SECRET});
+        if(!JWT_REFRESH_SECRET) {
+            return res.status(500).send('Refresh secret Not Found');
+        }
+        const refreshToken = generateRefreshToken({user, JWT_REFRESH_SECRET});
 
-        res.status(200).send('User Loge in');
+        user.refreshToken = refreshToken;
+        await user.save();
+        res.status(200).send({
+            token,
+            refreshToken
+        });
 
     } catch (error) {
         res.status(500).send(error)
     }
 }
 
+const handelRefreshTokenGeneration = async (req: Request, res:Response) => {
+
+const refreshToken: string = req.body.refreshToken;
+if(!refreshToken) {
+    return res.status(401).send("refreshtoken required");
+}
+try {
+    const user = await User.findOne({
+        refreshToken
+    });
+    console.log(user);
+    if(!user) {
+        return res.status(403).send("Invalid Refresh Token");
+    }
+    if(!JWT_REFRESH_SECRET) {
+        return res.status(500).send('Refresh secret Not Found');
+    }
+    jwt.verify(refreshToken, JWT_REFRESH_SECRET, (err, decode) => {
+        if(err) {
+            return res.status(403).send("Invalid Refresh Token");
+        }
+        if(!JWT_SECRET) {
+            return res.status(500).send('Secret Not Found');
+        }
+        const token = generateAccessToken({user, JWT_SECRET});
+        res.status(200).send({token});
+    })
+    } catch(error) {
+        res.status(500).send("Server Error");
+    }
+}
+
 export default {
     signup,
-    signin
+    signin,
+    handelRefreshTokenGeneration
 }

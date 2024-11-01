@@ -8,8 +8,10 @@ const router  = Router();
 // Auth Routes
 router.post('/signup', authController.signup);
 router.post('/signin', authController.signin);
+router.post('/refreshtoken', authController.handelRefreshTokenGeneration);
 
-router.get('/', userController.get);
+
+router.get('/', userMiddleware.auth, userController.get);
 router.get('/:id', userController.getByID);
 router.post('/', userMiddleware.userValidation, userMiddleware.userVallidationHandler, userController.create);
 router.put('/:id',userMiddleware.userValidation, userMiddleware.userVallidationHandler,  userController.update);
