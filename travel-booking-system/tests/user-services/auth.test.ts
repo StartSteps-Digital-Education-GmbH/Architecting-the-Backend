@@ -50,6 +50,19 @@ describe('User API', () => {
 
   },
   timeout
-)
+);
 
+it('Should recive Unauthorized when tring to access a secure route without proving auth token', async() => {
+    axios.get(`${userEndpoint}/`, {
+        headers
+    }).catch((
+        response
+    )=> {
+        expect(response).toMatchObject({
+            status:401,
+        })
+    });
+}, 
+timeout
+)
 });
