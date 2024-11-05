@@ -1,17 +1,27 @@
 import axios from 'axios';
 
 describe('User API', () => {
-  it('should create a new user', async () => {
-    const response = await axios.post('http://localhost:3000/api/users/signup', {
-      name: 'test user5',
-      email: 'test158114555@test5.com',
-      password: 'password123',
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const userEndpoint = 'http://localhost:3000/api/users';
+    const mockUserDetails = {
+        name: 'test user5',
+        email: 'testuser563277@test5.com',
+        password: 'password123',
+    }
 
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+
+    const timeout = 15000;
+
+  it('should create a new user', async () => {
+    const response = await axios.post(`${userEndpoint}/signup`, {
+        name: mockUserDetails.name,
+        email: mockUserDetails.email,
+        password: mockUserDetails.password,
+    }, {
+      headers
+    },);
     // Access only `status` and `data` to avoid circular references
     expect(response).toMatchObject({
         status: 201,
@@ -20,5 +30,26 @@ describe('User API', () => {
           message: 'User created',
         },
       });
-  });
+  },
+  timeout
+);
+
+  it('Should Login when details are correct', async () => {
+    const response = await axios.post(`${userEndpoint}/signin`, {
+        email: mockUserDetails.email,
+        password: mockUserDetails.password
+    },
+    {
+        headers
+    });
+        expect(response).toMatchObject({
+            status: 200,
+        })
+        expect(response.data).toHaveProperty("token")
+        expect(response.data).toHaveProperty("refreshToken")
+
+  },
+  timeout
+)
+
 });
