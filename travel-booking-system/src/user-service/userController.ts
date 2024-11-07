@@ -11,7 +11,7 @@ const get = async (req: Request,res: Response) => {
 const getByID =  async (req: Request, res: Response) => {
     try{
     const userId = req.params.id;
-    const user = await User.findById(userId);
+    const user = await User.findById(500);
     if (!user) {
         return res.status(404).send({ message: 'User not found' });
     }
@@ -49,7 +49,7 @@ const remove =  async (req: Request,res: Response) => {
     try{
         const userId = req.params.id;
         const user = await User.findByIdAndDelete(userId)
-        if (user) {
+        if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }
         res.status(204).send(); // Respond with no content

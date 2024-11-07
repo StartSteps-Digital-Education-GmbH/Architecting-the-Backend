@@ -10,7 +10,7 @@ describe('Testing User Routes', () =>{
     const timeout = 15000;
     const mockUser = {            
         name: 'temporary user 5',
-        email: 'newemail@em5ail234.com'
+        email: 'newemail3463@em5ail234.com'
     }
     beforeEach(async() => {
         const response = await axios.post(`${userEndpoint}/`, mockUser, {
@@ -19,15 +19,13 @@ describe('Testing User Routes', () =>{
         // console.log('beforeEach', response)
         testUserId = response.data._id;
     }, timeout);
-    // afterEach(async()=> {
-    //     console.log(testUserId);
-    //     const response = await axios.delete(`${userEndpoint}/${testUserId}`, {
-    //         headers
-    //     })
-    //     // console.log('afterEach', response)
+    afterEach(async () => {
+        if (testUserId) {
+                const response = await axios.delete(`${userEndpoint}/${testUserId}`, { headers });
+        }
 
-    // }, timeout);
-    
+    }, timeout);
+
     it('get a User by Id', async () => {
         const response = await axios.get(`${userEndpoint}/${testUserId}`,{headers}) ;
         // console.log('response', response)
