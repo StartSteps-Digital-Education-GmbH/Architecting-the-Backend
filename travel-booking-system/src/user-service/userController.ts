@@ -9,16 +9,20 @@ const get = async (req: Request,res: Response) => {
 };
 
 const getByID =  async (req: Request, res: Response) => {
+    try{
     const userId = req.params.id;
     const user = await User.findById(userId);
     if (!user) {
         return res.status(404).send({ message: 'User not found' });
     }
     res.status(200).send(user); // Respond with the found user
+    } catch(error) {
+        res.sendStatus(500).send(error)
+    }
 }
 
 const create = async (req: Request,res: Response) => {
-
+    try{
     const {name, email} = req.body;
     const user  = new User({
         name,
@@ -26,6 +30,9 @@ const create = async (req: Request,res: Response) => {
     });
     await user.save()
     res.status(201).send(user);
+    } catch(error) {
+        res.status(500).send(error)
+    }
 }
 
 const update =  async (req: Request,res: Response) => {
@@ -39,12 +46,16 @@ const update =  async (req: Request,res: Response) => {
 }
 
 const remove =  async (req: Request,res: Response) => {
-    const userId = req.params.id;
-    const user = await User.findByIdAndDelete(userId)
-    if (user) {
-        return res.status(404).send({ message: 'User not found' });
+    try{
+        const userId = req.params.id;
+        const user = await User.findByIdAndDelete(userId)
+        if (user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+        res.status(204).send(); // Respond with no content
+    }catch(error) {
+        res.status(500).send(error);
     }
-    res.status(204).send(); // Respond with no content
 }
 
 

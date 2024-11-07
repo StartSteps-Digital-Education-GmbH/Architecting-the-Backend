@@ -27,6 +27,7 @@ const generateRefreshToken = ({user, JWT_REFRESH_SECRET}:{
 
 
 const signup = async (req: Request, res: Response) => {
+    console.log('request recived');
     const {name, email, password} = req.body;
     //If the password comes already encrypted from frntend
     // if(!FRONTEND_SECRET) {
@@ -37,7 +38,6 @@ const signup = async (req: Request, res: Response) => {
     // console.log('decrypted password', decryptedPassword);
     try {
         const hashedPAssword = await bcrypt.hash(password, 10);
-        console.log('Hashed Password', hashedPAssword);
         const newUser = new User({
             name, 
             email,
