@@ -40,7 +40,7 @@ const update =  async (req: Request,res: Response) => {
     const userId = req.params.id;
     const { name, email } = req.body;
     const user = await User.findByIdAndUpdate(userId, {name, email}, {new: true});
-    if (user) {
+    if (!user) {
         return res.status(404).send({ message: 'User not found' });
     }
     res.status(200).send(user); // Respond with the updated user

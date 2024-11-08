@@ -10,7 +10,8 @@ jest.mock('mongoose',() => ({
 
 jest.mock('../../src/modals/userModel', () => ({
     Schema: jest.fn(), //initialing
-    findById: jest.fn()
+    findById: jest.fn(),
+    findByIdAndUpdate: jest.fn()
 }));
 
 describe('testing Users controller functions by mocking DB connection and http request/response', () => {
@@ -54,7 +55,7 @@ describe('testing Users controller functions by mocking DB connection and http r
         expect(sendMock).toHaveBeenCalledWith({ message: 'User not found' });
     })
 
-    it('should return 404 when the user is not found', async()=> {
+    it('should return 500 when a server error happens', async()=> {
         req.params = {id: mockUser._id};
         (User.findById as jest.Mock).mockRejectedValue({error: 'DB not working'}); //Mocking the Caase when thier is an issue with DB
 
@@ -63,6 +64,21 @@ describe('testing Users controller functions by mocking DB connection and http r
         expect(User.findById).toHaveBeenCalledWith(mockUser._id);
         expect(statusMock).toHaveBeenCalledWith(500);
         expect(sendMock).toHaveBeenCalledWith({error: 'DB not working'});
-    })
+    });
 
+    it('should call the correct functions when update contoller function is called', async () => {
+        req.params = {id: mockUser._id};
+        const updatedUserDetails = {
+            name: 'Updated name',
+            email: 'newemail34534@test.com'
+        };
+        req.body = updatedUserDetails;
+
+        (User.findByIdAndUpdate as jest.Mock).mockResolvedValue(updatedUserDetails);
+        await userContoller.update(req as Request, res as Response);
+
+        expect(User.findByIdAndUpdate).toHaveBeenCalledWith(mockUser._id, {name: updatedUserDetails.name, email: updatedUserDetails.email}, {new: true})
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith(updatedUserDetails);
+    })
 })
