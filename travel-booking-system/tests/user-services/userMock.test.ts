@@ -4,26 +4,26 @@ import User from '../../src/modals/userModel';
 import userContoller from '../../src/user-service/userController';
 
 jest.mock('mongoose',() => ({
-    connect: jest.fn(),
+    connect: jest.fn(), //initializing
     disconnect: jest.fn()
 }))
 
 jest.mock('../../src/modals/userModel', () => ({
-    Schema: jest.fn(),
+    Schema: jest.fn(), //initialing
     findById: jest.fn()
 }));
 
 describe('testing Users controller functions by mocking DB connection and http request/response', () => {
-    let req: Partial<Request>;
+    let req: Partial<Request>; //defination
     let res: Partial<Response>;
 
-    let statusMock: jest.Mock;
+    let statusMock: jest.Mock; //defination
     let sendMock: jest.Mock;
 
-    const mockUser = {_id:'123', name: 'ahmadasdas', email: 'test@test.com'};
+    const mockUser = {_id:'123', name: 'ahmadasdas', email: 'test@test.com'}; //mocked data
     beforeEach(()=> {
         req = {}
-        statusMock = jest.fn().mockReturnThis();
+        statusMock = jest.fn().mockReturnThis(); //return this(res)
         sendMock= jest.fn();
         res = {status:statusMock, send:sendMock};
     });
@@ -33,8 +33,8 @@ describe('testing Users controller functions by mocking DB connection and http r
     })
 
     it('should return a user by ID', async()=> {
-        req.params = {id: '123'};
-        (User.findById as jest.Mock).mockResolvedValue(mockUser);
+        req.params = {id: mockUser._id};
+        (User.findById as jest.Mock).mockResolvedValue(mockUser); //mocking the resolved case of a promise(return a value from function)
 
         await userContoller.getByID(req as Request, res as Response);
 
@@ -42,4 +42,27 @@ describe('testing Users controller functions by mocking DB connection and http r
         expect(statusMock).toHaveBeenCalledWith(200);
         expect(sendMock).toHaveBeenCalledWith(mockUser);
     })
+
+    it('should return 404 when the user is not found', async()=> {
+        req.params = {id: mockUser._id};
+        (User.findById as jest.Mock).mockResolvedValue(undefined); //Mocking the case when user is not found from DB
+
+        await userContoller.getByID(req as Request, res as Response);
+
+        expect(User.findById).toHaveBeenCalledWith(mockUser._id);
+        expect(statusMock).toHaveBeenCalledWith(404);
+        expect(sendMock).toHaveBeenCalledWith({ message: 'User not found' });
+    })
+
+    it('should return 404 when the user is not found', async()=> {
+        req.params = {id: mockUser._id};
+        (User.findById as jest.Mock).mockRejectedValue({error: 'DB not working'}); //Mocking the Caase when thier is an issue with DB
+
+        await userContoller.getByID(req as Request, res as Response);
+
+        expect(User.findById).toHaveBeenCalledWith(mockUser._id);
+        expect(statusMock).toHaveBeenCalledWith(500);
+        expect(sendMock).toHaveBeenCalledWith({error: 'DB not working'});
+    })
+
 })

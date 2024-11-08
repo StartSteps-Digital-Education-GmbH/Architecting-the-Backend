@@ -11,13 +11,14 @@ const get = async (req: Request,res: Response) => {
 const getByID =  async (req: Request, res: Response) => {
     try{
     const userId = req.params.id;
-    const user = await User.findById(500);
+    const user = await User.findById(userId);
     if (!user) {
-        return res.status(404).send({ message: 'User not found' });
+        res.status(404).send({ message: 'User not found' });
+        return;
     }
     res.status(200).send(user); // Respond with the found user
     } catch(error) {
-        res.sendStatus(500).send(error)
+        res.status(500).send(error)
     }
 }
 
