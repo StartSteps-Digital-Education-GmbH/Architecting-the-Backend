@@ -1,9 +1,10 @@
 import mongoose, {Schema, Document} from "mongoose";
 
-interface IUser extends Document {
-    id: number;
+export interface IUser extends Document {
     name: string;
     email: string;
+    password: string;
+    refreshToken?: string;
 }
 
 const userSchema = new Schema({
@@ -18,6 +19,13 @@ const userSchema = new Schema({
     },
     age: {
         type: Number,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    refreshToken: {
+        type: String,
     },
     createdAt: {
         type: Date,
