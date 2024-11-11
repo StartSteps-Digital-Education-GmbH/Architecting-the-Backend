@@ -10,11 +10,11 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "moduleResolution": "NodeNext",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
     },
     "include": [
       "src/**/*",
-      "api/**/*"
+      "api/**/*",                
     ],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "tests/**/*"]
 }
