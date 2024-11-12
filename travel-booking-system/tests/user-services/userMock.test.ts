@@ -80,5 +80,33 @@ describe('testing Users controller functions by mocking DB connection and http r
         expect(User.findByIdAndUpdate).toHaveBeenCalledWith(mockUser._id, {name: updatedUserDetails.name, email: updatedUserDetails.email}, {new: true})
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.send).toHaveBeenCalledWith(updatedUserDetails);
+    });
+
+    //PATCH
+    //the user will send a request with user id
+    //mock the result of findByIdAndUpdate
+    //body which will contain email or name
+    // if user was not it should updated and we send 200 response with new updated user
+    //if not found to 404
+    //if thier server error we expect to return 500
+
+    it('the controller function Should call UpdateUser with name when a patch request is send with name' , async () => {
+        req.params = {id: mockUser._id}
+        const updatedDetails = {
+            name: 'updatedName'
+        };
+        req.body = updatedDetails;
+
+        (User.findByIdAndUpdate as jest.Mock).mockResolvedValue({...mockUser, name: updatedDetails.name});
+
+        await userController.updatePartially(req as Request, res as Response)
+
+        expect(User.findByIdAndUpdate).toHaveBeenCalledWith(mockUser._id, {name: updatedDetails.name}, {new: true})
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalledWith({
+            ...mockUser,
+            name: updatedDetails.name
+        })
+
     })
 })

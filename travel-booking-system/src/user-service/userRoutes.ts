@@ -17,6 +17,4 @@ router.post('/', userMiddleware.userValidation, userMiddleware.userVallidationHa
 router.put('/:id',userMiddleware.userValidation, userMiddleware.userVallidationHandler,  userController.update);
 router.delete('/:id', userController.remove);
 
-
-
 export default router;

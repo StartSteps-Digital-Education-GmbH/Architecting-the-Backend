@@ -40,4 +40,26 @@ describe('Testing User Routes', () =>{
         expect(response.status).toBe(200);
         expect(response.data).toMatchObject(updatedDetails);
     }, timeout)
+
+    it('Should Update the User name when a patch request is send with name', async () => {
+        const updatedDetails = {
+            name: 'updatedName'
+        };
+        const response = await axios.patch(`${userEndpoint}/${testUserId}`,updatedDetails,{headers});
+        expect(response.status).toBe(200);
+        expect(response.data).toMatchObject({
+            ...mockUser, name: updatedDetails.name
+        })
+    }, timeout)
+
+    it('PATCH request: Should Return a 404 when user not found', async () => {
+        const updatedDetails = {
+            name: 'updatedName'
+        };
+        const randomMongooseId = '5f8f3b3b7b3f7d0f7c7f7d0f';
+        const response = await axios.patch(`${userEndpoint}/${randomMongooseId}`,updatedDetails,{headers});
+        expect(response.status).toBe(400);
+        expect(response.data).toMatchObject(
+            {message: 'User Not Fond'})
+    }, timeout)
 })
