@@ -29,8 +29,9 @@ const get =  async (req: Request, res: Response) => {
             price: sortByPrice
         }
     }
-    const page = parseInt(req.query.page || 1);
-    const limit = parseInt(req.query.limit || 0);
+    const page = parseInt(req.query?.page as string || '1');
+    const limit = parseInt(req.query?.limit as string || '0');
+
     const flights = await Flight.find(filter, {
         __v: 0
     }).sort(sortBy).skip((page-1)*limit).limit(limit);

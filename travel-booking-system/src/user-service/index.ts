@@ -7,7 +7,9 @@ dotenv.config();
 const app = express();
 
 const PORT = process.env.USER_SERVICES_PATH || 3001;
-app.use('/api/users',router);
+app.use(express.json());  //Vercel is converting requests to json
+
+app.use('/api/users',router); 
 
 const connectDB = async () => {
     try {
@@ -21,5 +23,11 @@ const connectDB = async () => {
         console.log("Error in connecting to the DB", error)
     }
 }
+
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log("the APP is runing in port 3001")
+    }) 
+})
 
 export {app, connectDB};

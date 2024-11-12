@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "user": "node dist/src/user-service/server.js",
-    "flight": "node dist/src/flight-service/server.js",
+    "user": "node dist/src/user-service/index.js",
+    "flight": "node dist/src/flight-service/index.js",
     "test": "jest",
     "build": "tsc"
   },

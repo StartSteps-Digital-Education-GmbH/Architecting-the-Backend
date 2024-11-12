@@ -8,8 +8,10 @@ const app = express();
 
 const PORT = process.env.FLIGHT_SERVICES_PATH || 3002;
 
-// app.use(express.json());
+app.use(express.json()); //Vercel is converting requests to json
+
 app.use('/api/flights',router);
+
 const connecDB = async () => {
     try {
         if(process.env.MONGODB_URI) {
@@ -22,5 +24,12 @@ const connecDB = async () => {
         console.log("Error in connecting to the DB", error)
     }
 }
+
+
+connecDB().then(() => {
+    app.listen(PORT, () => {
+        console.log("the APP is runing in port 3002")
+    }) 
+})
 
 export {app, connecDB};
