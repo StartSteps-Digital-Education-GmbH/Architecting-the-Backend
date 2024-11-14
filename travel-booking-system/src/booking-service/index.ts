@@ -18,6 +18,7 @@ const connectDB = async () => {
             await mongoose.connect(databaseURI);
             mongoose.model('User', userSchema);
             mongoose.model('Flight', flightSchema);
+            console.log("Database connected");
         } else {
             console.log("Database URI missing from enviromental variables");
         }
@@ -25,5 +26,11 @@ const connectDB = async () => {
         console.log("Error in Database connection", error);
     }
 }
+
+connectDB().then(() => {
+    app.listen(3003, () => {
+        console.log("the APP is runing in port 3003")
+    })
+})
 
 export {app, connectDB};

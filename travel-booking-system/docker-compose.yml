@@ -1,0 +1,21 @@
+services:
+  user-services:
+    build:
+      context: .
+      dockerfile: src/user-service/Dockerfile
+    ports:
+      - "3001:3001"
+  
+  flight-services:
+    build:
+      context: .
+      dockerfile: src/flight-service/Dockerfile
+    ports:
+      - "3002:3002"
+
+  booking-services:
+    build:
+      context: .
+      dockerfile: src/booking-service/Dockerfile
+    ports:
+      - "3003:3003"
