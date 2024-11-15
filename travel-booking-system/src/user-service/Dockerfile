@@ -20,7 +20,6 @@ COPY --from=builder /app/dist/src/modals ./dist/src/modals
 COPY --from=builder /app/dist/src/utils ./dist/src/utils
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.env ./
 
 EXPOSE 3001
 

@@ -10,3 +10,4 @@ jest.config.json
 minimal-frontend
 api
 .vercel
+.env
