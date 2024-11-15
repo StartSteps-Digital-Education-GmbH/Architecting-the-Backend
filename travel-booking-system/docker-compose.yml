@@ -5,6 +5,8 @@ services:
       dockerfile: src/user-service/Dockerfile
     ports:
       - "3001:3001"
+    depends_on:
+      - mongo
   
   flight-services:
     build:
@@ -12,6 +14,8 @@ services:
       dockerfile: src/flight-service/Dockerfile
     ports:
       - "3002:3002"
+    depends_on:
+      - mongo
 
   booking-services:
     build:
@@ -19,3 +23,15 @@ services:
       dockerfile: src/booking-service/Dockerfile
     ports:
       - "3003:3003"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:5
+    ports:
+      - "27017:27017"
+    # volumes:
+    #   - mongo_data:/data/db
+  
+  # Volumes:
+  #   mongo_data
