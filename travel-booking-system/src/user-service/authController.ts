@@ -12,7 +12,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // const FRONTEND_SECRET = process.env.FRONTEND_SECRET;
 
 const generateAccessToken = ({user, JWT_SECRET}: {
-    user,
+    user: User,
     JWT_SECRET: string,
 }) => {
     const token = jwt.sign({id: user.user_id},JWT_SECRET,{expiresIn: '1h'})
@@ -20,7 +20,7 @@ const generateAccessToken = ({user, JWT_SECRET}: {
 }
 
 const generateRefreshToken = ({user, JWT_REFRESH_SECRET}:{
-    user,
+    user: User,
     JWT_REFRESH_SECRET: string
 }) => {
     const refreshToken = jwt.sign({id: user.user_id}, JWT_REFRESH_SECRET, {expiresIn: '7d'})

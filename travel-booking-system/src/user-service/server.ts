@@ -14,6 +14,14 @@ const connectToSQL  = async () => {
     }
 }
 
+app.use(express.json());
 app.use('/api/users',router);
+
+connectToSQL().then(() => {
+    app.listen(3001, ()=> {
+        console.log("the User services is running on PORT:3001")
+    }
+    )
+})
 
 export {app, connectToSQL};

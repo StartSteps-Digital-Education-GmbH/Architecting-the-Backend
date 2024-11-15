@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    environment: 
+      POSTGRES_USER: travel_user
+      POSTGRES_PASSWORD: travel_user
+      POSTGRES_DB: travel_management_system
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U travel_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  user-services:
+    build:
+      context: .
+      dockerfile: src/user-service/Dockerfile
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: travel_user
+      DATABASE_PASSWORD: travel_user
+      DATABASE_NAME: travel_management_system
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    
+  
+  flight-services:
+    build:
+      context: .
+      dockerfile: src/flight-service/Dockerfile
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: travel_user
+      DATABASE_PASSWORD: travel_user
+      DATABASE_NAME: travel_management_system
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
